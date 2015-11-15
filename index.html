@@ -35,6 +35,9 @@
             border: none;
             box-shadow: none;
         }
+        .reveal td {
+            vertical-align: middle;
+        }
     </style>
 
 </head>
@@ -48,8 +51,106 @@
 
         <section>
             <h1>Асинхронный JavaScript в ES2016</h1>
+            <p>Развитие и планы на будущее</p>
+            <table>
+                <tr>
+                    <td>
+                        Артем<br>
+                        @artemdemo
+                    </td>
+                    <td><img style="width: 50%;" src="img/hh_logo.jpg" /></td>
+                </tr>
+            </table>
         </section>
 
+        <section>
+            <h2>Асинхронность JS</h2>
+            <ul>
+                <li>Никуда от нее не деться (UI должен жить)</li>
+                <li>Камень преткновения, особенно, если вы пришли из чего-то синхронного вроде PHP</li>
+                <li>Боль вложенности (callbacks, promises)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Как хочется чтобы все работало?</h2>
+            <pre class="fragment"><code>
+        function getUserResume(userId) {
+            var user = fetchUserData(userId);
+            var resume = fetchResume(user.resumeId);
+
+            return resume;
+        }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Callbacks спешат на помощь <i class="fa fa-medkit"></i></h2>
+            <pre><code>
+function getUserResume(userId, callback) {
+    fetchUserData(userId, function(error, user) {
+        if (error) {
+            callback(error);
+        } else {
+            fetchResume(user.resumeId, function(error, resume) {
+                if (error) {
+                    callback(error);
+                } else {
+                    callback(resume);
+                }
+            })
+        }
+    });
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>У нас же есть Promises <i class="fa fa-hand-peace-o"></i></h2>
+            <pre><code>
+    function getUserResume(userId) {
+        return fetchUserData(userId)
+            .then((user) => fetchResume(user.resumeId))
+    }
+            </code></pre>
+            <pre class="fragment"><code>
+    getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG')
+        .then(
+            (resume) => console.log(resume),
+            (error) => console.error(error))
+            </code></pre>
+        </section>
+
+        <section>
+            <p>Выглядет неплохо</p>
+            <p class="fragment">Однако, что если мы могли бы писать код почти как синхронный?</p>
+        </section>
+
+        <section>
+            <pre><code>
+        function getUserResume(userId) {
+            var user = fetchUserData(userId);
+            var resume = fetchResume(user.resumeId);
+
+            return resume;
+        }
+            </code></pre>
+
+            <h3 class="fragment"><i class="fa fa-magic"></i> магия генераторов</h3>
+
+            <pre class="fragment"><code>
+        function* getUserResume(userId) {
+            var user = yield fetchUserData(userId);
+            var resume = yield fetchResume(user.resumeId);
+
+            return resume;
+        }
+            </code></pre>
+        </section>
+
+        <section>
+            <p>Однако, чтобы продолжить, нам нужно разобраться в том, что же такое генераторы</p>
+        </section>
 
     </div>
 </div>
