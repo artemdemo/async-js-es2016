@@ -52,15 +52,16 @@
         <section>
             <h1>Асинхронный JavaScript в ES2016</h1>
             <p>Развитие и планы на будущее</p>
-            <table>
-                <tr>
-                    <td>
-                        Артем<br>
-                        @artemdemo
-                    </td>
-                    <td><img style="width: 50%;" src="img/hh_logo.jpg" /></td>
-                </tr>
-            </table>
+            <p>
+                Артем<br>
+                @artemdemo
+            </p>
+        </section>
+
+        <section>
+            <p>
+                <img style="width: 50%;" src="img/hh_logo.jpg" />
+            </p>
         </section>
 
         <section>
@@ -122,7 +123,7 @@ function getUserResume(userId, callback) {
         </section>
 
         <section>
-            <p>Выглядет неплохо</p>
+            <p>Выглядет неплохо и это в принципе тот максимум, который нам дает ES5</p>
             <p class="fragment">Однако, что если мы могли бы писать код почти как синхронный?</p>
         </section>
 
@@ -140,16 +141,40 @@ function getUserResume(userId, callback) {
 
             <pre class="fragment"><code>
         function* getUserResume(userId) {
-            var user = yield fetchUserData(userId);
-            var resume = yield fetchResume(user.resumeId);
+            let user = yield fetchUserData(userId);
+            let resume = yield fetchResume(user.resumeId);
 
             return resume;
         }
+            </code></pre>
+            <pre class="fragment"><code>
+        spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
+            .then(
+                (resume) => console.log(resume),
+                (error) => console.error(error))
             </code></pre>
         </section>
 
         <section>
             <p>Однако, чтобы продолжить, нам нужно разобраться в том, что же такое генераторы</p>
+        </section>
+
+        <section>
+            <h2>Generators</h2>
+            <p>Двусторонняя комуникация <i class="fa fa-arrows-h"></i> yield</p>
+            <pre class="fragment"><code>
+    function *sumGenerator() {
+        let x = yield "First value";
+        let y = yield "Second value";
+        return x + y;
+    }
+            </code></pre>
+            <pre class="fragment"><code>
+    let sum = sumGenerator();
+    sum.next();    // {"value":"First value","done":false}
+    sum.next(3);   // {"value":"Second value","done":false}
+    sum.next(8);   // {"value":11,"done":true}
+            </code></pre>
         </section>
 
     </div>
