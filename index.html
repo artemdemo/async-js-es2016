@@ -53,14 +53,14 @@
             <h1>Асинхронный JavaScript в ES2016</h1>
             <p>Развитие и планы на будущее</p>
             <p>
-                Артем<br>
+                Артем Демочко<br>
                 @artemdemo
             </p>
         </section>
 
         <section>
             <p>
-                <img style="width: 50%;" src="img/hh_logo.jpg" />
+                <img style="width: 50%; border-radius: 10px;" src="img/hh_logo.jpg" />
             </p>
         </section>
 
@@ -161,7 +161,7 @@ function getUserResume(userId, callback) {
 
         <section>
             <h2>Generators</h2>
-            <p>Двусторонняя комуникация <i class="fa fa-arrows-h"></i> yield</p>
+            <p>Двусторонняя коммуникация <i class="fa fa-arrows-h"></i> yield</p>
             <pre class="fragment"><code>
     function *sumGenerator() {
         let x = yield "First value";
@@ -174,6 +174,37 @@ function getUserResume(userId, callback) {
     sum.next();    // {"value":"First value","done":false}
     sum.next(3);   // {"value":"Second value","done":false}
     sum.next(8);   // {"value":11,"done":true}
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code>
+    function* getUserResume(userId) {
+      let user = yield fetchUserData(userId);         // Promise
+      let resume = yield fetchResume(user.resumeId);  // Promise
+
+      return resume;
+    }
+
+    spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
+        .then(
+            (resume) => console.log(resume),
+            (error) => console.error(error));
+            </code></pre>
+
+            <pre class="fragment"><code>
+    function spawn (generator) {
+      return new Promise((resolve, reject) => {
+        let onResult = lastPromiseResult => {
+          let {value, done} = generator.next(lastPromiseResult);
+          if (!done) {
+            value.then(onResult, reject);
+          }
+          else resolve(value);
+        }
+        onResult();
+      })
+    }
             </code></pre>
         </section>
 
