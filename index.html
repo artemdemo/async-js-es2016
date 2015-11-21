@@ -50,37 +50,37 @@
     <div class="slides">
 
         <section>
-            <h1>Асинхронный JavaScript в ES2016</h1>
-            <p>Развитие и планы на будущее</p>
-            <p>
-                Артем Демочко<br>
-                @artemdemo
-            </p>
+          <h1>Асинхронный JavaScript в ES2016</h1>
+          <p>Развитие и планы на будущее</p>
+          <p>
+            Артем Демочко<br>
+            @artemdemo
+          </p>
         </section>
 
         <section>
-            <p>
-                <img style="width: 50%; border-radius: 10px;" src="img/hh_logo.jpg" />
-            </p>
+          <p>
+            <img style="width: 50%; border-radius: 10px;" src="img/hh_logo.jpg" />
+          </p>
         </section>
 
         <section>
-            <h2>Асинхронность JS</h2>
-            <ul>
-                <li>Никуда от нее не деться (UI должен жить)</li>
-                <li>Камень преткновения, особенно, если вы пришли из чего-то синхронного вроде PHP</li>
-                <li>Боль вложенности (callbacks, promises)</li>
-            </ul>
+          <h2>Асинхронность JS</h2>
+          <ul>
+            <li>Никуда от нее не деться (UI должен жить)</li>
+            <li>Камень преткновения, особенно, если вы пришли из чего-то синхронного вроде PHP</li>
+            <li>Боль вложенности (callbacks, promises)</li>
+          </ul>
         </section>
 
         <section>
             <h2>Как хочется чтобы все работало?</h2>
             <pre class="fragment"><code>
         function getUserResume(userId) {
-            var user = fetchUserData(userId);
-            var resume = fetchResume(user.resumeId);
+          var user = fetchUserData(userId);
+          var resume = fetchResume(user.resumeId);
 
-            return resume;
+          return resume;
         }
             </code></pre>
         </section>
@@ -89,19 +89,19 @@
             <h2>Callbacks спешат на помощь <i class="fa fa-medkit"></i></h2>
             <pre><code>
 function getUserResume(userId, callback) {
-    fetchUserData(userId, function(error, user) {
+  fetchUserData(userId, function(error, user) {
+    if (error) {
+      callback(error);
+    } else {
+      fetchResume(user.resumeId, function(error, resume) {
         if (error) {
-            callback(error);
+          callback(error);
         } else {
-            fetchResume(user.resumeId, function(error, resume) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(resume);
-                }
-            })
+          callback(resume);
         }
-    });
+      })
+    }
+  });
 }
             </code></pre>
         </section>
@@ -110,30 +110,30 @@ function getUserResume(userId, callback) {
             <h2>У нас же есть Promises <i class="fa fa-hand-peace-o"></i></h2>
             <pre><code>
     function getUserResume(userId) {
-        return fetchUserData(userId)
-            .then((user) => fetchResume(user.resumeId))
+      return fetchUserData(userId)
+        .then((user) => fetchResume(user.resumeId))
     }
             </code></pre>
             <pre class="fragment"><code>
     getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG')
-        .then(
-            (resume) => console.log(resume),
-            (error) => console.error(error))
+      .then(
+          (resume) => console.log(resume),
+          (error) => console.error(error))
             </code></pre>
         </section>
 
         <section>
-            <p>Выглядет неплохо и это в принципе тот максимум, который нам дает ES5</p>
-            <p class="fragment">Однако, что если мы могли бы писать код почти как синхронный?</p>
+          <p>Выглядет неплохо и это в принципе тот максимум, который нам дает ES5</p>
+          <p class="fragment">Однако, что если мы могли бы писать код почти как синхронный?</p>
         </section>
 
         <section>
             <pre><code>
         function getUserResume(userId) {
-            var user = fetchUserData(userId);
-            var resume = fetchResume(user.resumeId);
+          var user = fetchUserData(userId);
+          var resume = fetchResume(user.resumeId);
 
-            return resume;
+          return resume;
         }
             </code></pre>
 
@@ -141,71 +141,140 @@ function getUserResume(userId, callback) {
 
             <pre class="fragment"><code>
         function* getUserResume(userId) {
-            let user = yield fetchUserData(userId);
-            let resume = yield fetchResume(user.resumeId);
+          let user = yield fetchUserData(userId);
+          let resume = yield fetchResume(user.resumeId);
 
-            return resume;
+          return resume;
         }
             </code></pre>
             <pre class="fragment"><code>
         spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
-            .then(
-                (resume) => console.log(resume),
-                (error) => console.error(error))
+          .then(
+              (resume) => console.log(resume),
+              (error) => console.error(error))
             </code></pre>
         </section>
 
         <section>
-            <p>Однако, чтобы продолжить, нам нужно разобраться в том, что же такое генераторы</p>
+          <p>Однако, чтобы продолжить, нам нужно разобраться в том, что же такое генераторы</p>
         </section>
 
         <section>
-            <h2>Generators</h2>
-            <p>Двусторонняя коммуникация <i class="fa fa-arrows-h"></i> yield</p>
-            <pre class="fragment"><code>
-    function *sumGenerator() {
-        let x = yield "First value";
-        let y = yield "Second value";
-        return x + y;
-    }
-            </code></pre>
-            <pre class="fragment"><code>
-    let sum = sumGenerator();
-    sum.next();    // {"value":"First value","done":false}
-    sum.next(3);   // {"value":"Second value","done":false}
-    sum.next(8);   // {"value":11,"done":true}
-            </code></pre>
+          <h2>Generators</h2>
+          <p>Двусторонняя коммуникация <i class="fa fa-arrows-h"></i> yield</p>
+          <pre class="fragment"><code>
+  function *sumGenerator() {
+      let x = yield "First value";
+      let y = yield "Second value";
+      return x + y;
+  }
+          </code></pre>
+          <pre class="fragment"><code>
+  let sum = sumGenerator();
+  sum.next();    // {"value":"First value","done":false}
+  sum.next(3);   // {"value":"Second value","done":false}
+  sum.next(8);   // {"value":11,"done":true}
+          </code></pre>
         </section>
 
         <section>
-            <pre><code>
-    function* getUserResume(userId) {
-      let user = yield fetchUserData(userId);         // Promise
-      let resume = yield fetchResume(user.resumeId);  // Promise
+          <pre><code>
+  function* getUserResume(userId) {
+    let user = yield fetchUserData(userId);         // Promise
+    let resume = yield fetchResume(user.resumeId);  // Promise
 
-      return resume;
-    }
+    return resume;
+  }
 
-    spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
-        .then(
-            (resume) => console.log(resume),
-            (error) => console.error(error));
-            </code></pre>
+  spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
+      .then(
+          (resume) => console.log(resume),
+          (error) => console.error(error));
+          </code></pre>
 
-            <pre class="fragment"><code>
-    function spawn (generator) {
-      return new Promise((resolve, reject) => {
-        let onResult = lastPromiseResult => {
-          let {value, done} = generator.next(lastPromiseResult);
-          if (!done) {
-            value.then(onResult, reject);
-          }
-          else resolve(value);
+          <pre class="fragment"><code>
+  function spawn (generator) {
+    return new Promise((resolve, reject) => {
+      let onResult = lastPromiseResult => {
+        let {value, done} = generator.next(lastPromiseResult);
+        if (!done) {
+          value.then(onResult, reject);
         }
-        onResult();
-      })
-    }
-            </code></pre>
+        else resolve(value);
+      }
+      onResult();
+    })
+  }
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>В ES2016 анонсирована Async</h2>
+          <ul>
+              <li>Появилось две новых команды: async и await</li>
+              <li>В сухом остатке это новый дизайн для все тех же Promise</li>
+          </ul>
+
+          <pre><code>
+            async function foo() {
+              if( Math.round(Math.random()) )
+                return 'Success!';
+              else
+                throw 'Failure!';
+            }
+          </code></pre>
+          <pre class="fragment"><code>
+            function foo() {
+              if( Math.round(Math.random()) )
+                return Promise.resolve('Success!');
+              else
+                return Promise.reject('Failure!');
+            }
+          </code></pre>
+        </section>
+
+        <section>
+          <p>
+            Таким образом все ту же функцию getUserResume() мы можем переписать с использованием нового асинхронного функционала
+          </p>
+          <pre><code>
+      function* getUserResume(userId) {
+        let user = yield fetchUserData(userId);         // Promise
+        let resume = yield fetchResume(user.resumeId);  // Promise
+
+        return resume;
+      }
+          </code></pre>
+
+          <pre class="fragment"><code>
+      async function getUserResume(userId) {
+        let user = await fetchUserData(userId);         // Promise
+        let resume = await fetchResume(user.resumeId);  // Promise
+
+        return resume;
+      }
+          </code></pre>
+        </section>
+
+        <section>
+          <p>
+            Это означает, что в этом случае нам нет необходимости использовать генераторы, а можно обойтись только Promise.
+          </p>
+          <pre class="fragment"><code>
+      async function getUserResume(userId) {
+        let user = await fetchUserData(userId);         // Promise
+        let resume = await fetchResume(user.resumeId);  // Promise
+
+        return resume;
+      }
+
+      // Вспомогательная функция spawn() больше не требуется
+
+      getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG')
+        .then(
+          (resume) => console.log(resume),
+          (error) => console.error(error));
+          </code></pre>
         </section>
 
     </div>
