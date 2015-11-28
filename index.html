@@ -147,12 +147,6 @@ function getUserResume(userId, callback) {
           return resume;
         }
             </code></pre>
-            <pre class="fragment"><code>
-        spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
-          .then(
-              (resume) => console.log(resume),
-              (error) => console.error(error))
-            </code></pre>
         </section>
 
         <section>
@@ -178,18 +172,19 @@ function getUserResume(userId, callback) {
         </section>
 
         <section>
-          <pre><code>
+          <pre style="margin-top: -10px;"><code>
   function* getUserResume(userId) {
     let user = yield fetchUserData(userId);         // Promise
     let resume = yield fetchResume(user.resumeId);  // Promise
-
     return resume;
   }
+          </code></pre>
 
+          <pre class="fragment"><code>
   spawn(getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG'))
       .then(
           (resume) => console.log(resume),
-          (error) => console.error(error));
+          (error) => console.error(error));          
           </code></pre>
 
           <pre class="fragment"><code>
