@@ -29,6 +29,14 @@
         .reveal pre code {
             max-height: 500px;
         }
+        .reveal .narrow-code pre {
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+        .reveal .narrow-code pre code {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
         .reveal section img.clean-img {
             width: 35%;
             background: none;
@@ -171,8 +179,8 @@ function getUserResume(userId, callback) {
           </code></pre>
         </section>
 
-        <section>
-          <pre style="margin-top: -10px;"><code>
+        <section class="narrow-code">
+          <pre><code>
   function* getUserResume(userId) {
     let user = yield fetchUserData(userId);         // Promise
     let resume = yield fetchResume(user.resumeId);  // Promise
@@ -270,6 +278,19 @@ function getUserResume(userId, callback) {
           (resume) => console.log(resume),
           (error) => console.error(error));
           </code></pre>
+        </section>
+
+        <section>
+          <p>
+            Можно ли уже сейчас это использовать?
+          </p>
+          <p class="fragment">
+            Да, используйте Babel
+          </p>
+        </section>
+
+        <section>
+          <h2>Спасибо</h2>
         </section>
 
     </div>
