@@ -2,7 +2,34 @@
 
 http://artemdemo.github.io/async-js-es2016/#/
 
-Some useful links
+##Getting started
+
+Install all dependencies
+
+```
+$ npm i
+```
+
+1. Start WebSocets server
+   
+   ```
+   $ npm run ws-server
+   ```
+
+2. Start http server
+
+   ```
+   $ npm run http-server
+   ```
+
+3. Open presentation on your computer
+   http:192.168.11.226:8000
+
+4. Open remote on your phone
+   http:192.168.11.226:8000/remote
+   
+
+##Some useful links
 
 * https://www.youtube.com/watch?v=lil4YCCXRYc
 * http://code.tutsplus.com/tutorials/a-primer-on-es7-async-functions--cms-22367
@@ -12,7 +39,7 @@ Some useful links
 
 ## Examples with babel
 
-### Usage of spawn funcition
+### Usage of spawn function
 
 ```javascript
 function* getUserResume(userId) {

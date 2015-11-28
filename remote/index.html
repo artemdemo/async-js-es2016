@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Remote for "Async JS in ES2016"</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+        .remote {
+            display: table;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: gray;
+        }
+        .control-wrap {
+            display: table-cell;
+            color: white;
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="remote">
+        <div class="control-wrap Remote-Left">
+            Left
+        </div>
+        <div class="control-wrap Remote-Right">
+            Right
+        </div>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../js/statuslog.js"></script>
+    <script src="../js/remote.js"></script>
+</body>
