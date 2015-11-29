@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>Remote for "Async JS in ES2016"</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <style>
         .remote {
             display: table;
@@ -14,23 +14,35 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background-color: gray;
+            background-color: #2B2B2B;
         }
         .control-wrap {
             display: table-cell;
             color: white;
+            width: 50%;
             vertical-align: middle;
             text-align: center;
+            font-size: 250%;
+        }
+        .control-wrap:active {
+            color: rgba(255, 255, 255, 0.64);
+            box-shadow: inset 2px 2px 13px rgba(0, 0, 0, 0.5);
+        }
+        .control-wrap:active .glyphicon {
+            transform: translate(3px, 3px);
+        }
+        .control-wrap:first-child {
+            border-right: 1px dashed #1c1c1c;
         }
     </style>
 </head>
 <body>
     <div class="remote">
         <div class="control-wrap Remote-Left">
-            Left
+            <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
         </div>
         <div class="control-wrap Remote-Right">
-            Right
+            <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
         </div>
     </div>
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>

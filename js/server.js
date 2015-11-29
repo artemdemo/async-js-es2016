@@ -3,15 +3,25 @@ var wsConnections = {};
 
 wss = new WebSocketServer({ port: 8080 });
 wss.on('connection', function connection(ws) {
-	var userID = parseInt(ws.upgradeReq.url.substr(1), 10);
-	wsConnections[userID] = ws;
+    var userId = +(new Date());
+    console.log('Connected; userId: %s', userId);
+    wsConnections[userId] = ws;
+    ws.send('userId: ' + userId);
 
-	// If you need to send message to specific users see here: http://stackoverflow.com/questions/16280747/sending-message-to-a-specific-connected-users-using-websocket
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-        ws.send(message);
-        for (var userID in wsConnections) {
+    ws.on('message', function incoming(inMessage) {
+        console.log('received: %s', inMessage);
+        inMessage = JSON.parse(inMessage);
+        var currentUserId = inMessage.userId;
+        var message = inMessage.message;
 
+        for (var userId in wsConnections) {
+            if (wsConnections.hasOwnProperty(userId) && userId != currentUserId) {
+                try {
+                    wsConnections[userId].send(message);
+                } catch (e) {
+                    delete wsConnections[userId];
+                }
+            }
         }
     });
     ws.send('Connected');

@@ -25,7 +25,9 @@
      * Processes incomming message from the server
      */
     function wsMessage(inMessage) {
-    	switch (inMessage) {
+        var data = inMessage.data;
+
+    	switch (data) {
     		case 'PREV':
     			statusLog('PREV');
     			Reveal.prev();
