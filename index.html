@@ -60,23 +60,13 @@
         <section>
           <h1>Асинхронный JavaScript в ES2016</h1>
           <p>Развитие и планы на будущее</p>
-          <p>
-            Артем Демочко<br>
-            @artemdemo
-          </p>
-        </section>
-
-        <section>
-          <p>
-            <img style="width: 50%; border-radius: 10px;" src="img/hh_logo.jpg" />
-          </p>
         </section>
 
         <section>
           <h2>Асинхронность JS</h2>
           <ul>
             <li>Никуда от нее не деться (UI должен жить)</li>
-            <li>Камень преткновения, особенно, если вы пришли из чего-то синхронного вроде PHP</li>
+            <li>Камень преткновения, особенно, если пришли из чего-то синхронного вроде PHP</li>
             <li>Боль вложенности (callbacks, promises)</li>
           </ul>
         </section>
@@ -260,37 +250,47 @@ function getUserResume(userId, callback) {
         </section>
 
         <section>
-          <p>
-            Это означает, что в этом случае нам нет необходимости использовать генераторы, а можно обойтись только Promise.
-          </p>
+          <table>
+            <tr>
+              <td></td>
+              <td>Синхронно</td>
+              <td>Асинхронно</td>
+            </tr>
+            <tr>
+              <td>function</td>
+              <td>Value</td>
+              <td>Promise</td>
+            </tr>
+            <tr>
+              <td>function*</td>
+              <td>Iterator</td>
+              <td>?</td>
+            </tr>
+          </table>
           <pre class="fragment"><code>
-      async function getUserResume(userId) {
-        let user = await fetchUserData(userId);         // Promise
-        let resume = await fetchResume(user.resumeId);  // Promise
-
-        return resume;
+      async function* getUserResume(userId) {
+        //...
       }
-
-      // Вспомогательная функция spawn() больше не требуется
-
-      getUserResume('msxMqjP2bzBSdi5sg8zhFNxduK7FZvteEG')
-        .then(
-          (resume) => console.log(resume),
-          (error) => console.error(error));
           </code></pre>
         </section>
 
         <section>
-          <p>
-            Можно ли уже сейчас это использовать?
-          </p>
-          <p class="fragment">
-            Да, используйте Babel
-          </p>
-        </section>
+          <h2>async function*</h2>
+            <pre><code>
+    async function* getVacancyResponses(vacancyId) {
+      for (var resume on new WebSocket('/vacancy/' + vacancyId)) {
+        yield { resume }
+      }
+    }
+            </code></pre>
 
-        <section>
-          <h2>Спасибо</h2>
+            <pre class="fragment"><code>
+    async function printVacancyResponses() {
+      for (var vacancy on getVacancyResponses('11254008')) {
+        console.log(vacancy);
+      }
+    }
+            </code></pre>
         </section>
 
     </div>
